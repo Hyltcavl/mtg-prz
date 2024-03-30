@@ -1,11 +1,11 @@
 def compare_prices(cards_list: {}, scryfall_card_list: {}, store_name: str) -> []:
     prices_of_cards = []
     for card_name, cards in cards_list.items():
-        card_name = card_name.replace("Æ", "Ae")
+        card_name = card_name.replace("Æ", "Ae").lower()
         scryfall_cards = scryfall_card_list.get(card_name)
         if scryfall_cards == None:
             for name, content in scryfall_card_list.items():
-                name:str = name
+                name = name
                 if name.startswith(card_name) or name.endswith(card_name):
                     scryfall_cards = content
         if scryfall_cards == None:

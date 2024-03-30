@@ -27,7 +27,7 @@ def download_scryfall_cards():
         for obj in parser:
             if obj.get("layout") != "token": #Filtering out token cards
                 scryfall_card = {
-                    "name": obj.get("name"),
+                    "name": obj.get("name").lower(),
                     "set": obj.get("set_name"),
                     "prices": obj.get("prices")
                 }
