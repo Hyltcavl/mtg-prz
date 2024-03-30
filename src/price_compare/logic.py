@@ -1,7 +1,11 @@
+import re
+
+
 def compare_prices(cards_list: {}, scryfall_card_list: {}, store_name: str) -> []:
     prices_of_cards = []
-    for card_name, cards in cards_list.items():
-        card_name = card_name.replace("Æ", "Ae").lower()
+    for card_name_original, cards in cards_list.items():
+        card_name = re.sub(r'[^a-zA-Z]', '', card_name_original.replace("Æ", "Ae").lower())
+
         scryfall_cards = scryfall_card_list.get(card_name)
         if scryfall_cards == None:
             for name, content in scryfall_card_list.items():
@@ -9,7 +13,7 @@ def compare_prices(cards_list: {}, scryfall_card_list: {}, store_name: str) -> [
                 if name.startswith(card_name) or name.endswith(card_name):
                     scryfall_cards = content
         if scryfall_cards == None:
-            print(f'Unable to find {card_name}')
+            print(f'Unable to find {card_name_original}')
             continue
         
         #find the lowest priced card of the scryfall cards 
@@ -47,7 +51,7 @@ def compare_prices(cards_list: {}, scryfall_card_list: {}, store_name: str) -> [
                 lowest_price_set = lowest_foil_price_set.get("set")
             
         price_compare_obj = {
-            "name": card_name,
+            "name": card_name_original,
             "store_price": lowest_price if lowest_price != float("inf") else None,
             "store_set": lowest_price_set,
             "store_price_foil": lowest_foil_price if lowest_foil_price != float("inf") else None,
