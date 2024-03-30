@@ -19,7 +19,7 @@ alpha_scan:
 	echo "" > log.txt
 	DEBUG="yes" .venv/bin/$(VERSION_PYTHON) -m src.alpha_scan.main
 
-price_check:
+price:
 	$(VENV_ACTIVATE)
 	echo "" > log.txt
-	DEBUG="yes" .venv/bin/$(VERSION_PYTHON) -m src.scryfall_price_compare.main | tee log.json
+	DEBUG="yes" .venv/bin/$(VERSION_PYTHON) -m src.price_compare.main | tee log.json

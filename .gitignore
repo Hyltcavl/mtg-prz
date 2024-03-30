@@ -3,3 +3,9 @@ log.txt
 __pycache__
 
 scryfall_cards/cards_**.json
+
+alphaspel_cards
+dragonslair_cards
+nice_prices
+results
+scryfall_cards
