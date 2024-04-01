@@ -1,5 +1,5 @@
 .PHONY: venv
-VERSION_PYTHON=python3.10
+VERSION_PYTHON=python3.12
 VENV_ACTIVATE = . .venv/bin/activate
 BIN_ECHO=/bin/echo
 
@@ -12,7 +12,7 @@ venv:
 dl_scan:
 	$(VENV_ACTIVATE)
 	echo "" > log.txt
-	DEBUG="yes" .venv/bin/$(VERSION_PYTHON) -m src.dl_scan.main | tee log.json
+	DEBUG="yes" .venv/bin/$(VERSION_PYTHON) -m src.dl_scan.main
 
 alpha_scan:
 	$(VENV_ACTIVATE)
@@ -22,4 +22,4 @@ alpha_scan:
 price:
 	$(VENV_ACTIVATE)
 	echo "" > log.txt
-	DEBUG="yes" .venv/bin/$(VERSION_PYTHON) -m src.price_compare.main | tee log.json
+	DEBUG="yes" .venv/bin/$(VERSION_PYTHON) -m src.price_compare.main

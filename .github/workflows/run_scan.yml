@@ -1,0 +1,34 @@
+name: Get nice price
+
+on: [push]
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Set up Python 3.12
+      uses: actions/setup-python@v3
+      with:
+        python-version: '3.12'
+
+    - name: Install dependencies
+      run: |
+        make venv
+
+    - name: Get DL scan
+      run: |
+        make dl_scan
+
+    - name: Get Alpha scan
+      run: |
+        make alpha_scan
+
+    - name: Get nice price
+      run: |
+        make price
+
+
+      
+
