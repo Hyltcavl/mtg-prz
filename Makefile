@@ -12,14 +12,14 @@ venv:
 dl_scan:
 	$(VENV_ACTIVATE)
 	echo "" > log.txt
-	DEBUG="yes" .venv/bin/$(VERSION_PYTHON) -m src.dl_scan.main
+	.venv/bin/$(VERSION_PYTHON) -m src.dl_scan.main
 
 alpha_scan:
 	$(VENV_ACTIVATE)
 	echo "" > log.txt
-	DEBUG="yes" .venv/bin/$(VERSION_PYTHON) -m src.alpha_scan.main
+	.venv/bin/$(VERSION_PYTHON) -m src.alpha_scan.main
 
 price:
 	$(VENV_ACTIVATE)
 	echo "" > log.txt
-	DEBUG="yes" .venv/bin/$(VERSION_PYTHON) -m src.price_compare.main
+	.venv/bin/$(VERSION_PYTHON) -m src.price_compare.main
