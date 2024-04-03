@@ -5,13 +5,13 @@ import re
 
 from src.price_compare.logic import compare_prices, get_nice_prices
 from src.resources.file_io import print_to_new_file
-from src.resources.other import get_time_difference_in_minutes
+from src.resources.other import date_time_as_string, get_time_difference_in_minutes
 from src.scryfall.main import download_scryfall_cards
 
 # Get scryfall cards
 start_time = datetime.now()
 today_date_as_string = datetime.now().strftime("%Y-%m-%d")
-start_time_as_string = start_time.strftime("%Y-%m-%d_%H:%M")
+start_time_as_string = date_time_as_string(today_date_as_string)
 
 folder_name = "scryfall_cards"
 if not os.path.exists(folder_name):
