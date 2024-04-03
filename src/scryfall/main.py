@@ -5,6 +5,7 @@ import requests
 import json
 
 from src.resources.file_io import print_to_new_file, print_to_new_file_bytes
+from src.resources.other import date_time_as_string
 
 
 def download_large_scryfall_file(file_path: str, file_name: str):
@@ -19,8 +20,8 @@ def download_scryfall_cards():
 
     # Download all cards
     file_path = "scryfall_cards"
-    date = datetime.now().strftime("%Y-%m-%d_%H:%M")
-    file_name = f"cards_{date}.json"
+    date_as_string = date_time_as_string(datetime.now())
+    file_name = f"cards_{date_as_string}.json"
     download_large_scryfall_file(file_path, file_name)
 
     # make the dowload smaller
@@ -43,4 +44,4 @@ def download_scryfall_cards():
             grouped_cards[name] = []
         grouped_cards[name].append(card)
 
-    print_to_new_file(file_path, f"small_cards_{date}.json", json.dumps(grouped_cards))
+    print_to_new_file(file_path, f"small_cards_{date_as_string}.json", json.dumps(grouped_cards))
