@@ -29,6 +29,16 @@ jobs:
       run: |
         make price
 
+    - name: Get nice price
+      run: |
+        mkdir -p artifacts
+        cp alphaspel_cards/* artifacts
+        cp dragonslair_cards/* artifacts
+        cp scryfall_cards/small_cards_* artifacts
+        cp nice_prices/* artifacts
 
-      
-
+    - name: Upload Artifacts
+      uses: actions/upload-artifact@v2
+      with:
+        name: results
+        path: artifacts
