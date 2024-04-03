@@ -11,7 +11,7 @@ from src.scryfall.main import download_scryfall_cards
 # Get scryfall cards
 start_time = datetime.now()
 today_date_as_string = datetime.now().strftime("%Y-%m-%d")
-start_time_as_string = date_time_as_string(today_date_as_string)
+start_time_as_string = date_time_as_string(start_time)
 
 folder_name = "scryfall_cards"
 if not os.path.exists(folder_name):
