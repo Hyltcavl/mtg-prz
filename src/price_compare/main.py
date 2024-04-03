@@ -14,6 +14,8 @@ today_date_as_string = datetime.now().strftime("%Y-%m-%d")
 start_time_as_string = start_time.strftime("%Y-%m-%d_%H:%M")
 
 folder_name = "scryfall_cards"
+if not os.path.exists(folder_name):
+    os.makedirs(folder_name)
 file_name = f'small_cards_{today_date_as_string}'
 scryfall_files = [file for file in os.listdir(folder_name) if file.startswith(file_name)]
 
