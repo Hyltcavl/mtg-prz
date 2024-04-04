@@ -57,6 +57,9 @@ for set_href in sets_links:
                 continue
 
             product_name = product.find(class_="product-name")
+
+            if product_name.lower().find("(italiensk)") != -1 or product_name.lower().find("(tysk)") != -1 or product_name.lower().find("(rysk)") != -1:
+                continue
             set_name = product_name.text.strip().split(":")
 
             ##Regular name and set
