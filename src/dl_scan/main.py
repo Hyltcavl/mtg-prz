@@ -46,6 +46,11 @@ for x in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 15, 16]:
             print(request_link)
             print(f"unable to fetch/print {x} because: {error}")
 
+        if os.environ["SHORT"]:
+            break
+    if os.environ["SHORT"]:
+        break
+
 
 print_to_new_file(folder_name, file_name, json.dumps(link_cards_list))
 difference_in_minutes = get_time_difference_in_minutes(starting_time)

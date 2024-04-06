@@ -1,5 +1,6 @@
 import datetime
 import json
+import os
 from bs4 import BeautifulSoup
 import requests
 import re
@@ -58,7 +59,11 @@ for set_href in sets_links:
 
             product_name = product.find(class_="product-name")
 
-            if product_name.lower().find("(italiensk)") != -1 or product_name.lower().find("(tysk)") != -1 or product_name.lower().find("(rysk)") != -1:
+            if (
+                product_name.text.lower().find("(italiensk)") != -1
+                or product_name.text.lower().find("(tysk)") != -1
+                or product_name.text.lower().find("(rysk)") != -1
+            ):
                 continue
             set_name = product_name.text.strip().split(":")
 
@@ -122,6 +127,9 @@ for set_href in sets_links:
             if name not in grouped_cards:
                 grouped_cards[name] = []
             grouped_cards[name].append(card)
+
+    if os.environ["SHORT"]:
+        break
 
 
 print_to_new_file(
