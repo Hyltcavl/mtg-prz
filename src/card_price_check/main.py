@@ -1,8 +1,12 @@
 import requests
 import urllib.parse
 
+def get_live_card_prices(card_name: str) -> [{}]:
+    slug = get_card_search_uri(card_name)
+    list = get_list_of_prices_for_card(slug)
+    return list
 
-def get_card_search_uri(card_name: str):
+def get_card_search_uri(card_name: str) -> str:
     card_name_utf8 = urllib.parse.quote(card_name)
     url = f"https://api.mtgstocks.com/search/autocomplete/{card_name_utf8}"
 
@@ -37,7 +41,7 @@ def get_card_search_uri(card_name: str):
     raise IndexError("No nontoken card found")
 
 
-def get_list_of_prices_for_card(slug: str) -> [str]:
+def get_list_of_prices_for_card(slug: str) -> [{}]:
     slug_utf8 = urllib.parse.quote(slug)
     url = f"https://api.mtgstocks.com/prints/{slug_utf8}"
 
@@ -63,10 +67,12 @@ def get_list_of_prices_for_card(slug: str) -> [str]:
         # Extract the JSON data
         data = response.json()
 
-        current_card_set_mkm_price_trend = data.get("latest_price_mkm").get("avg")
+        cardlist = []
+        cardlist.append({"set": data.get("card_set").get("name"), "price": data.get("latest_price_mkm").get("avg")})
+       
 
-        prices = [obj.get("latest_price_mkm") for obj in data.get("sets")]
-        prices.append(current_card_set_mkm_price_trend)
+        prices = [{"set": obj.get("set_name"), "price": obj.get("latest_price_mkm")} for obj in data.get("sets")]
+        prices.extend(cardlist)
         return prices
 
     raise IndexError(f"Bad response from api: {response.json()}")

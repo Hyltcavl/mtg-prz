@@ -8,6 +8,9 @@ from src.dl_scan.logic import get_amount_of_pages, parse_html
 from src.resources.file_io import print_to_new_file
 from src.resources.other import date_time_as_string, get_time_difference_in_minutes
 
+# Check config
+short_run = os.environ.get("SHORT", False)
+
 # Create a folder if needed
 folder_name = "dragonslair_cards"
 # os.makedirs(folder_name, exist_ok=True)
@@ -46,9 +49,9 @@ for x in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 15, 16]:
             print(request_link)
             print(f"unable to fetch/print {x} because: {error}")
 
-        if os.environ.get("SHORT"):
+        if short_run:
             break
-    if os.environ.get("SHORT"):
+    if short_run:
         break
 
 

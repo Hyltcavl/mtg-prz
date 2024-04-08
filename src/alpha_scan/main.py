@@ -5,8 +5,12 @@ from bs4 import BeautifulSoup
 import requests
 import re
 
+from src.alpha_scan.logic import get_card_information
 from src.resources.file_io import print_to_new_file
 from src.resources.other import date_time_as_string, get_time_difference_in_minutes
+
+# Check config
+short_run = os.environ.get("SHORT", False)
 
 start_time = datetime.datetime.now()
 start_time_as_string = date_time_as_string(start_time)
@@ -53,82 +57,17 @@ for set_href in sets_links:
 
         for product in products:
 
-            in_stock = product.find(class_="stock").text.strip()
-            if in_stock == "Slutsåld":
+            try:
+                card = get_card_information(product)
+            except:
                 continue
-
-            product_name = product.find(class_="product-name")
-
-            if (
-                product_name.text.lower().find("(italiensk)") != -1
-                or product_name.text.lower().find("(tysk)") != -1
-                or product_name.text.lower().find("(rysk)") != -1
-            ):
-                continue
-            set_name = product_name.text.strip().split(":")
-
-            ##Regular name and set
-
-            if len(set_name) == 3:
-                try:
-                    raw_name = set_name[2].replace("(Begagnad)", "").strip()
-                    set = set_name[1].strip()
-                except:
-                    raw_name = set_name[1].replace("(Begagnad)", "").strip()
-                    set_name[1] = "unknown"
-
-            ##universes beyond: somthing kind of set names with extra :
-            else:
-                try:
-                    raw_name = set_name[3].replace("(Begagnad)", "").strip()
-                    set = f"{set_name[1]} {set_name[2]}".strip()
-
-                except:
-                    raw_name = set_name[1].replace("(Begagnad)", "").strip()
-                    set_name[1] = "unknown"
-
-            # Skipp token cards
-            if bool(re.search(r"Token", raw_name, re.IGNORECASE)):
-                continue
-
-            price = product.find(class_="price text-success").text
-            match = re.search(r"\d+", price)
-
-            foil = (
-                bool(re.search(r"\(Foil\)", raw_name, re.IGNORECASE))
-                or bool(re.search(r"\(Etched Foil\)", raw_name, re.IGNORECASE))
-                or bool(re.search(r"\(Foil Etched\)", raw_name, re.IGNORECASE))
-            )
-
-            name = (
-                re.sub(r"\([^()]*\)", "", raw_name)
-                .replace("v.2", "")
-                .replace("V.2", "")
-                .replace("v.1", "")
-                .replace("v.3", "")
-                .replace("v.4", "")
-                .strip()
-            )
-            name = re.sub(
-                r"\b(\w+)\s/\s(\w+)\b", r"\1 // \2", name
-            )  # adds another / when there's only one
-            # Edgecases
-            name = (
-                name.removeprefix("Commander 2016 ")
-                .removeprefix("Conflux ")
-                .removeprefix("Eventide ")
-                .removeprefix("Shadowmoor ")
-                .removeprefix("Planechase card bundle ")
-            )
-
-            card = {"name": name, "set": set, "price": int(match.group()), "foil": foil}
 
             name = card["name"]
             if name not in grouped_cards:
                 grouped_cards[name] = []
             grouped_cards[name].append(card)
 
-    if os.environ.get("SHORT"):
+    if short_run:
         break
 
 

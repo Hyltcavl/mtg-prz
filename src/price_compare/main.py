@@ -1,9 +1,8 @@
 from datetime import datetime
 import json
 import os
-import re
 
-from src.price_compare.logic import compare_prices, get_nice_prices
+from src.price_compare.logic import compare_prices, get_nice_prices, get_scryfall_cards
 from src.resources.file_io import print_to_new_file
 from src.resources.other import date_time_as_string, get_time_difference_in_minutes
 from src.scryfall.main import download_scryfall_cards
@@ -13,24 +12,7 @@ start_time = datetime.now()
 today_date_as_string = datetime.now().strftime("%Y-%m-%d")
 start_time_as_string = date_time_as_string(start_time)
 
-folder_name = "scryfall_cards"
-if not os.path.exists(folder_name):
-    os.makedirs(folder_name)
-file_name = f"small_cards_{today_date_as_string}"
-scryfall_files = [
-    file for file in os.listdir(folder_name) if file.startswith(file_name)
-]
-
-if len(scryfall_files) == 0:
-    download_scryfall_cards()
-    scryfall_files = [
-        file for file in os.listdir(folder_name) if file.startswith(file_name)
-    ]
-else:
-    print("scryfall cards already downloaded today")
-
-with open(f"{folder_name}/{scryfall_files[0]}", "rb") as f:
-    scryfall_card_list = json.load(f)
+scryfall_card_list = get_scryfall_cards(today_date_as_string)
 
 # Get alphaspel cards
 alphaspel_folder = "alphaspel_cards"

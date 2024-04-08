@@ -7,6 +7,6 @@ def date_time_as_string(date=datetime.now()) -> str:
 
 
 def get_time_difference_in_minutes(start: datetime, untill=datetime.now()) -> float:
-    difference_in_minutes = (start - untill).total_seconds() / 60
+    difference_in_minutes = (untill - start).total_seconds() / 60
 
     return round(difference_in_minutes, 4)

@@ -30,6 +30,9 @@ def download_scryfall_cards():
         parser = ijson.items(f, "item")
         for obj in parser:
             if obj.get("layout") != "token":  # Filtering out token cards
+                #TODO: remove the following sets: obj.get("set_name").find("Masters Edition") != -1 or obj.get("set_name").find("Magic Online Promos") != -1
+                #TODO: write test case for this function
+                #TODO: Add missing prices here!
                 scryfall_card = {
                     "name": re.sub(r"[^a-zA-Z]", "", obj.get("name").lower()),
                     "set": obj.get("set_name"),

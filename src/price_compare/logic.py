@@ -1,4 +1,30 @@
+import json
+import os
 import re
+
+from src.card_price_check.main import get_card_search_uri, get_list_of_prices_for_card
+from src.scryfall.main import download_scryfall_cards
+
+
+def get_scryfall_cards(today_date_as_string: str, folder_name="scryfall_cards") -> {}:
+    if not os.path.exists(folder_name):
+        os.makedirs(folder_name)
+    file_name = f"small_cards_{today_date_as_string}"
+    scryfall_files = [
+        file for file in os.listdir(folder_name) if file.startswith(file_name)
+    ]
+
+    if len(scryfall_files) == 0:
+        download_scryfall_cards()
+        scryfall_files = [
+            file for file in os.listdir(folder_name) if file.startswith(file_name)
+        ]
+    else:
+        print("scryfall cards already downloaded today")
+
+    with open(f"{folder_name}/{scryfall_files[0]}", "rb") as f:
+        scryfall_card_list = json.load(f)
+    return scryfall_card_list
 
 
 def compare_prices(cards_list: {}, scryfall_card_list: {}, store_name: str) -> []:
@@ -19,22 +45,7 @@ def compare_prices(cards_list: {}, scryfall_card_list: {}, store_name: str) -> [
             continue
 
         # find the lowest priced card of the scryfall cards
-        lowest_eur = float("inf")
-        lowest_eur_foil = float("inf")
-        lowest_eur_set = None
-        lowest_eur_foil_set = None
-
-        for scryfallCard in scryfall_cards:
-            eur = scryfallCard.get("prices").get("eur")
-
-            if eur and float(eur) < lowest_eur:
-                lowest_eur = float(eur)
-                lowest_eur_set = scryfallCard.get("set")
-
-            eur_foil = scryfallCard.get("prices").get("eur_foil")
-            if eur_foil and float(eur_foil) < lowest_eur_foil:
-                lowest_eur_foil = float(eur_foil)
-                lowest_eur_foil_set = scryfallCard.get("set")
+        lowest_eur, lowest_eur_foil, lowest_eur_set, lowest_eur_foil_set = get_lowest_price(scryfall_cards)
 
         # find the lowest priced alphaspel card
         lowest_price = float("inf")
@@ -74,6 +85,27 @@ def compare_prices(cards_list: {}, scryfall_card_list: {}, store_name: str) -> [
         }
         prices_of_cards.append(price_compare_obj)
     return prices_of_cards
+
+
+def get_lowest_price(scryfall_cards: {}):
+    lowest_eur = float("inf")
+    lowest_eur_foil = float("inf")
+    lowest_eur_set = None
+    lowest_eur_foil_set = None
+
+    for scryfallCard in scryfall_cards:
+        eur = scryfallCard.get("prices").get("eur")
+
+        if eur and float(eur) < lowest_eur:
+            lowest_eur = float(eur)
+            lowest_eur_set = scryfallCard.get("set")
+
+        eur_foil = scryfallCard.get("prices").get("eur_foil")
+        if eur_foil and float(eur_foil) < lowest_eur_foil:
+            lowest_eur_foil = float(eur_foil)
+            lowest_eur_foil_set = scryfallCard.get("set")
+
+    return lowest_eur, lowest_eur_foil, lowest_eur_set, lowest_eur_foil_set
 
 
 ### Retruns list of cards with cards prices lower in store then MKM trend
