@@ -46,9 +46,9 @@ for x in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 15, 16]:
             print(request_link)
             print(f"unable to fetch/print {x} because: {error}")
 
-        if os.environ["SHORT"]:
+        if os.environ.get("SHORT"):
             break
-    if os.environ["SHORT"]:
+    if os.environ.get("SHORT"):
         break
 
 

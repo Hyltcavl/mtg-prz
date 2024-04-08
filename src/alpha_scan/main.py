@@ -128,7 +128,7 @@ for set_href in sets_links:
                 grouped_cards[name] = []
             grouped_cards[name].append(card)
 
-    if os.environ["SHORT"]:
+    if os.environ.get("SHORT"):
         break
 
 
