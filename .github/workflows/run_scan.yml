@@ -105,9 +105,14 @@ jobs:
       with:
         name: dl_scan_short
         path: dragonslair_cards
+    
+    - name: LS
+      run: |
+        cd dragonslair_cards
+        ls -la
 
     - name: Unzip DL artifacts
-      run: unzip dragonslair_cards/*.zip
+      run: unzip dragonslair_cards/dl_scan_short.zip -d dragonslair_cards
 
     - name: Download Alphaspel artifacts
       uses: actions/download-artifact@v2
