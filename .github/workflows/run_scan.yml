@@ -106,13 +106,13 @@ jobs:
         name: dl_scan_short
         path: dragonslair_cards
     
-    - name: LS
-      run: |
-        cd dragonslair_cards
-        ls -la
+    # - name: LS
+    #   run: |
+    #     cd dragonslair_cards
+    #     ls -la
 
-    - name: Unzip DL artifacts
-      run: unzip dragonslair_cards/dl_scan_short.zip -d dragonslair_cards
+    # - name: Unzip DL artifacts
+    #   run: unzip dragonslair_cards/dl_scan_short.zip -d dragonslair_cards
 
     - name: Download Alphaspel artifacts
       uses: actions/download-artifact@v2
@@ -120,8 +120,8 @@ jobs:
         name: alpha_scan_short
         path: alphaspel_cards
 
-    - name: Unzip Alphaspel artifacts
-      run: unzip alphaspel_cards/*.zip -d alphaspel_cards
+    # - name: Unzip Alphaspel artifacts
+    #   run: unzip alphaspel_cards/*.zip -d alphaspel_cards
 
     - name: Set up Python 3.12
       uses: actions/setup-python@v3
