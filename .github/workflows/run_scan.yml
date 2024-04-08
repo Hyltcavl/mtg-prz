@@ -107,7 +107,7 @@ jobs:
         path: dragonslair_cards
 
     - name: Unzip DL artifacts
-      run: unzip dragonslair_cards/*.zip -d dragonslair_cards
+      run: unzip dragonslair_cards/*.zip
 
     - name: Download Alphaspel artifacts
       uses: actions/download-artifact@v2
