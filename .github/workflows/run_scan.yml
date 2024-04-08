@@ -10,53 +10,13 @@ on:
       - 'main'
 
 jobs:
-  # run:
-  #   runs-on: ubuntu-latest
-
-  #   steps:
-  #   - uses: actions/checkout@v3
-  #   - name: Set up Python 3.12
-  #     uses: actions/setup-python@v3
-  #     with:
-  #       python-version: '3.12'
-
-  #   - name: Install dependencies
-  #     run: |
-  #       make venv
-
-  #   - name: Get DL scan
-  #     run: |
-  #       make dl_scan
-
-  #   - name: Get Alpha scan
-  #     run: |
-  #       make alpha_scan
-
-  #   - name: Get nice price
-  #     run: |
-  #       make price
-
-  #   - name: Get nice price
-  #     run: |
-  #       mkdir -p artifacts
-  #       cp alphaspel_cards/* artifacts
-  #       cp dragonslair_cards/* artifacts
-  #       cp scryfall_cards/small_cards_* artifacts
-  #       cp nice_prices/* artifacts
-
-  #   - name: Upload Artifacts
-  #     uses: actions/upload-artifact@v2
-  #     with:
-  #       name: results
-  #       path: artifacts
-
 
   scan:
     runs-on: ubuntu-latest
 
     strategy:
       matrix:
-        scan_type: ['dl_scan_short', 'alpha_scan_short']
+        scan_type: ['dl_scan', 'alpha_scan']
 
     steps:
     - name: Checkout code
@@ -75,14 +35,14 @@ jobs:
 
     - name: Upload scan Artifacts
       uses: actions/upload-artifact@v2
-      if: ${{ matrix.scan_type == 'dl_scan_short' }}
+      if: ${{ matrix.scan_type == 'dl_scan' }}
       with:
         name: ${{ matrix.scan_type }}
         path: dragonslair_cards
 
     - name: Upload scan Artifacts
       uses: actions/upload-artifact@v2
-      if: ${{ matrix.scan_type == 'alpha_scan_short' }}
+      if: ${{ matrix.scan_type == 'alpha_scan' }}
       with:
         name: ${{ matrix.scan_type }}
         path: alphaspel_cards
@@ -103,25 +63,14 @@ jobs:
     - name: Download DL artifacts
       uses: actions/download-artifact@v2
       with:
-        name: dl_scan_short
+        name: dl_scan
         path: dragonslair_cards
-    
-    # - name: LS
-    #   run: |
-    #     cd dragonslair_cards
-    #     ls -la
-
-    # - name: Unzip DL artifacts
-    #   run: unzip dragonslair_cards/dl_scan_short.zip -d dragonslair_cards
 
     - name: Download Alphaspel artifacts
       uses: actions/download-artifact@v2
       with:
-        name: alpha_scan_short
+        name: alpha_scan
         path: alphaspel_cards
-
-    # - name: Unzip Alphaspel artifacts
-    #   run: unzip alphaspel_cards/*.zip -d alphaspel_cards
 
     - name: Set up Python 3.12
       uses: actions/setup-python@v3
