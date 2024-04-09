@@ -36,9 +36,11 @@ files = [
 dragonslair_file = files[0]
 with open(f"{dragonslair_folder}/{dragonslair_file}", "rb") as f:
     cards_list = json.load(f)
+
 dl_card_list_refined = {}
 for block in cards_list:
-    dl_card_list_refined.update(block.get("cards"))
+    if block != None:
+        dl_card_list_refined.update(block.get("cards"))
 dragonslair_cards_list = dl_card_list_refined
 
 prices_of_cards_alpha = compare_prices(

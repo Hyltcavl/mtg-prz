@@ -42,6 +42,7 @@ def get_cards(x, y) -> {}:
     except Exception as error:
         print(request_link)
         print(f"unable to fetch/print {x} because: {error}")
+        return {"link": request_link, "cards": grouped_cards}
 
 
 link_cards_list = []
