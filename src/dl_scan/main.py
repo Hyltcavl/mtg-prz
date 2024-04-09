@@ -3,6 +3,7 @@ import requests
 import json
 import re
 import os
+import concurrent.futures
 
 from src.dl_scan.logic import get_amount_of_pages, parse_html
 from src.resources.file_io import print_to_new_file
@@ -21,33 +22,36 @@ start_time_as_string = date_time_as_string(starting_time)
 file_name = f"cards_{start_time_as_string}.json"
 
 
+def get_cards(x, y) -> {}:
+    try:
+        request_link = f"https://astraeus.dragonslair.se/product/magic/card-singles/store:kungsholmstorg/cmc-{x}/{y}"
+        print(request_link)
+        rsp = requests.get(request_link)
+        card_list = parse_html(rsp.text)
+
+        grouped_cards = {}
+
+        for card in card_list:
+            name = card["name"]
+            if name not in grouped_cards:
+                grouped_cards[name] = []
+            grouped_cards[name].append(card)
+
+        return {"link": request_link, "cards": grouped_cards}
+
+    except Exception as error:
+        print(request_link)
+        print(f"unable to fetch/print {x} because: {error}")
+
+
 link_cards_list = []
 for x in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 15, 16]:
 
     pages = get_amount_of_pages(x)
-
     for y in range(1, pages + 1):
-        try:
-            request_link = f"https://astraeus.dragonslair.se/product/magic/card-singles/store:kungsholmstorg/cmc-{x}/{y}"
-            print(request_link)
-            rsp = requests.get(request_link)
-            card_list = parse_html(rsp.text)
 
-            grouped_cards = {}
-
-            for card in card_list:
-                name = card["name"]
-                if name not in grouped_cards:
-                    grouped_cards[name] = []
-                grouped_cards[name].append(card)
-
-            obj = {"link": request_link, "cards": grouped_cards}
-
-            link_cards_list.append(obj)
-
-        except Exception as error:
-            print(request_link)
-            print(f"unable to fetch/print {x} because: {error}")
+        cards = get_cards(x, y)
+        link_cards_list.append(cards)
 
         if short_run:
             break

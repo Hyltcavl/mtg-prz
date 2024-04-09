@@ -12,7 +12,7 @@ from src.resources.other import date_time_as_string, get_time_difference_in_minu
 # Check config
 short_run = os.environ.get("SHORT", False)
 
-start_time = datetime.datetime.now()
+start_time = datetime.now()
 start_time_as_string = date_time_as_string(start_time)
 
 # Get the page with all the sets
