@@ -1,9 +1,9 @@
-import datetime
 import json
 import os
-from bs4 import BeautifulSoup
 import requests
-import re
+
+from bs4 import BeautifulSoup
+from datetime import datetime
 
 from src.alpha_scan.logic import get_card_information
 from src.resources.file_io import print_to_new_file
