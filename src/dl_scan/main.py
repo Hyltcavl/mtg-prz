@@ -45,18 +45,23 @@ def get_cards(x, y) -> {}:
 
 
 link_cards_list = []
-for x in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 15, 16]:
+with concurrent.futures.ThreadPoolExecutor(max_workers=3) as executor:
+    futures = []
+    for x in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 15, 16]:
+        pages = get_amount_of_pages(x)
+        for y in range(1, pages + 1):
+            futures.append(executor.submit(get_cards, x, y))
+            if short_run:
+                break
 
-    pages = get_amount_of_pages(x)
-    for y in range(1, pages + 1):
-
-        cards = get_cards(x, y)
-        link_cards_list.append(cards)
-
-        if short_run:
-            break
-    if short_run:
-        break
+    for future in concurrent.futures.as_completed(futures):
+        try:
+            result = future.result()
+            link_cards_list.append(result)
+            if short_run:
+                break
+        except Exception as e:
+            print(f"An error occurred: {e}")
 
 
 print_to_new_file(folder_name, file_name, json.dumps(link_cards_list))
