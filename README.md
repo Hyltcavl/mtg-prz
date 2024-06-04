@@ -1,4 +1,5 @@
 # mtg-prz
+TODO: rewrite in rust, and include images
 
 TODO: remove basic lands when fetching from alpha, dl and making scryfall list smaller
 
