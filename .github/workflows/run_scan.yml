@@ -10,43 +10,86 @@ on:
       - 'main'
 
 jobs:
-  run:
+
+  scan:
     runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        scan_type: ['dl_scan', 'alpha_scan']
 
     steps:
     - uses: actions/checkout@v3
     
     - name: Set up Python 3.12
-      uses: actions/setup-python@v3
+      uses: actions/setup-python@v5
       with:
         python-version: '3.12'
 
     - name: Install dependencies
-      run: |
-        make venv
+      run: make venv
 
-    - name: Get DL scan
-      run: |
-        make dl_scan
+    - name: Run ${{ matrix.scan_type }} scan
+      run: make ${{ matrix.scan_type }}
 
-    - name: Get Alpha scan
+    - name: Upload scan Artifacts
+      uses: actions/upload-artifact@v4
+      if: ${{ matrix.scan_type == 'dl_scan' }}
+      with:
+        name: ${{ matrix.scan_type }}
+        path: dragonslair_cards
+
+    - name: Upload scan Artifacts
+      uses: actions/upload-artifact@v4
+      if: ${{ matrix.scan_type == 'alpha_scan' }}
+      with:
+        name: ${{ matrix.scan_type }}
+        path: alphaspel_cards
+
+  price:
+    needs: scan
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Create dirs
       run: |
-        make alpha_scan
+        mkdir dragonslair_cards
+        mkdir alphaspel_cards
+
+    - name: Download DL artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: dl_scan
+        path: dragonslair_cards
+
+    - name: Download Alphaspel artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: alpha_scan
+        path: alphaspel_cards
+
+    - name: Set up Python 3.12
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.12'
+
+    - name: Install dependencies
+      run: make venv
 
     - name: Get nice price
-      run: |
-        make price
+      run: make price
 
     - name: Get nice price
       run: |
         mkdir -p artifacts
-        cp alphaspel_cards/* artifacts
-        cp dragonslair_cards/* artifacts
         cp scryfall_cards/small_cards_* artifacts
         cp nice_prices/* artifacts
 
     - name: Upload Artifacts
-      uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v4
       with:
-        name: results
+        name: nice_prices
         path: artifacts

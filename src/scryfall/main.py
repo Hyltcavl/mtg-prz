@@ -5,6 +5,8 @@ import requests
 import json
 
 from src.resources.file_io import print_to_new_file, print_to_new_file_bytes
+from src.resources.other import date_time_as_string
+
 
 def download_large_scryfall_file(file_path: str, file_name: str):
     possible_downloads = requests.get("https://api.scryfall.com/bulk-data")
@@ -13,24 +15,29 @@ def download_large_scryfall_file(file_path: str, file_name: str):
 
     print_to_new_file_bytes(file_path, file_name, all_cards.content)
 
+
 def download_scryfall_cards():
 
-    #Download all cards
+    # Download all cards
     file_path = "scryfall_cards"
-    date = datetime.now().strftime("%Y-%m-%d_%H:%M")
-    file_name = f'cards_{date}.json'
-    download_large_scryfall_file(file_path,file_name)
+    date_as_string = date_time_as_string(datetime.now())
+    file_name = f"cards_{date_as_string}.json"
+    download_large_scryfall_file(file_path, file_name)
 
-    #make the dowload smaller
+    # make the dowload smaller
     scryfall_card_list = []
-    with open(f'{file_path}/{file_name}', 'rb') as f:
-        parser = ijson.items(f, 'item')
+    with open(f"{file_path}/{file_name}", "rb") as f:
+        parser = ijson.items(f, "item")
         for obj in parser:
-            if obj.get("layout") != "token": #Filtering out token cards
+            if obj.get("layout") != "token":  # Filtering out token cards
+                #TODO: remove the following sets: obj.get("set_name").find("Masters Edition") != -1 or obj.get("set_name").find("Magic Online Promos") != -1
+                #TODO: write test case for this function
+                #TODO: Add missing prices here!
+                #TODO: see if foil is true and nonfoil is false, then add onlyfoil true to the object
                 scryfall_card = {
-                    "name": re.sub(r'[^a-zA-Z]', '', obj.get("name").lower()),
+                    "name": re.sub(r"[^a-zA-Z]", "", obj.get("name").lower()),
                     "set": obj.get("set_name"),
-                    "prices": obj.get("prices")
+                    "prices": obj.get("prices"),
                 }
                 scryfall_card_list.append(scryfall_card)
 
@@ -41,5 +48,4 @@ def download_scryfall_cards():
             grouped_cards[name] = []
         grouped_cards[name].append(card)
 
-    print_to_new_file(file_path, f'small_cards_{date}.json', json.dumps(grouped_cards))
-    
+    print_to_new_file(file_path, f"small_cards_{date_as_string}.json", json.dumps(grouped_cards))
